@@ -1,0 +1,8 @@
+{"message":"Rendering comments.ejs","level":"info"}
+{"message":"Rendering comments.ejs","level":"info"}
+{"message":"Start rendering the data","level":"info"}
+{"message":"The response: [object Object]","level":"info"}
+{"message":"Start rendering the data","level":"info"}
+{"message":"Start rendering the data","level":"info"}
+{"level":"info","message":"info"}
+{"message":"new event: { _id: 5cd312f8f24fee57802e6ed3,\n  eventTitle: 'calendarEvent',\n  date: 2019-05-08T17:33:44.828Z,\n  __v: 0 }","level":"info"}
