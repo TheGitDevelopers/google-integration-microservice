@@ -41,11 +41,11 @@ router.get('/token', (req, res, next) => {
 
 //-------------------------------------------API POSTS-------------------------------------//
 
-router.post('/events', (req, res, next) => {
+router.post('/events', async (req, res, next) => {
 
     const items = req.body.result.items;
     const events = [];
-    items.map(item => {
+    await Promise.all(items.map(item => {
         const event = new Event({
             created: item.created,
             creator: {
@@ -86,6 +86,7 @@ router.post('/events', (req, res, next) => {
             if (e) {
                 // logger.loggerInfo.info(`new event: ${e}`);
                 events.push(e);
+                return Promise.resolve();
             } else {
                 logger.loggerError.error(`Something went wrong`);
                 return null;
@@ -96,17 +97,17 @@ router.post('/events', (req, res, next) => {
                 error: error
             });
         });
-    }).then(e => {
+    })).then(e => {
         console.log('----------------------------------------------------------------------');
         console.log(events);
+        console.log('----------------------------------------------------------------------');
+        console.log('----------------------------------------------------------------------');
+        console.log(e);
         console.log('----------------------------------------------------------------------');
         res.status(201).json({
             events: events
         });
     });
-    console.log('----------------------------------------------------------------------');
-    console.log(events);
-    console.log('----------------------------------------------------------------------');
 
 });
 
