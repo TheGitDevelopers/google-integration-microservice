@@ -1,8 +1,40 @@
 const mongoose = require('mongoose');
 
 const eventSchema = mongoose.Schema({
-    eventTitle: String,
-    date: mongoose.Schema.Types.Mixed,
+    created: String,
+    creator: {
+        email: String,
+        self: Boolean,
+    },
+    description: String,
+    end: {
+        dateTime: String
+    },
+    extendedProperties: {
+        private: {
+            everyoneDeclinedDismissed: String
+        }
+    },
+    htmlLink: String,
+    iCalUID: String,
+    id: String,
+    kind: String,
+    location: String,
+    organizer: {
+        email: String,
+        self: Boolean
+    },
+    reminders: {
+        useDefault: Boolean
+    },
+    sequence: Number,
+    start: {
+        dateTime: String
+    },
+    status: String,
+    summary: String,
+    updated: String,
+    timeZone: String
 });
 
 module.exports = mongoose.model('Event', eventSchema);

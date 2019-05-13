@@ -43,26 +43,64 @@ router.get('/token', (req, res, next) => {
 
 router.post('/events', (req, res, next) => {
 
-    const event = new Event({
-        eventTitle: req.body.eventTitle,
-        date: new Date()
-    });
-    event.save().then(e => {
-        if (e) {
-            logger.loggerInfo.info(`new event: ${e}`);
-            res.status(201).json({
-                message: 'success'
-            });
-        }
-        else {
-            logger.loggerError.error(`Something went wrong`);
-            return null;
-        }
-    }).catch(error => {
-        logger.loggerError.error(error);
-        res.status(500).json({
-            error: error
+    const items = req.body.result.items;
+    const events = [];
+    items.map(item => {
+        const event = new Event({
+            created: item.created,
+            creator: {
+                email: item.creator.email,
+                self: item.creator.self,
+            },
+            description: item.description,
+            end: {
+                dateTime: item.end.dateTime
+            },
+            extendedProperties: {
+                private: {
+                    everyoneDeclinedDismissed: item.private.everyoneDeclinedDismissed
+                }
+            },
+            htmlLink: item.htmlLink,
+            iCalUID: item.iCalUID,
+            id: item.id,
+            kind: item.kind,
+            location: item.location,
+            organizer: {
+                email: item.organizer.email,
+                self: item.organizer.self,
+            },
+            reminders: {
+                useDefault:  item.reminders.useDefault,
+            },
+            sequence: item.sequence,
+            start: {
+                dateTime: item.start.dateTime
+            },
+            status:  item.status,
+            summary:  item.summary,
+            updated:  item.updated,
+            timeZone:  req.body.result.timeZone,
         });
+         event.save().then(e => {
+             if (e) {
+                 logger.loggerInfo.info(`new event: ${e}`);
+                 events.push(item);
+             }
+             else {
+                 logger.loggerError.error(`Something went wrong`);
+                 return null;
+             }
+         }).catch(error => {
+             logger.loggerError.error(error);
+             res.status(500).json({
+                 error: error
+             });
+         });
+    });
+    console.log(items.length);
+    res.status(201).json({
+        events: events
     });
 });
 
