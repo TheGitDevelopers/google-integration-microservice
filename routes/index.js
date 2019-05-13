@@ -58,7 +58,7 @@ router.post('/events', (req, res, next) => {
             },
             extendedProperties: {
                 private: {
-                    everyoneDeclinedDismissed: item.private.everyoneDeclinedDismissed
+                    everyoneDeclinedDismissed: item.extendedProperties.private.everyoneDeclinedDismissed
                 }
             },
             htmlLink: item.htmlLink,
@@ -71,37 +71,43 @@ router.post('/events', (req, res, next) => {
                 self: item.organizer.self,
             },
             reminders: {
-                useDefault:  item.reminders.useDefault,
+                useDefault: item.reminders.useDefault,
             },
             sequence: item.sequence,
             start: {
                 dateTime: item.start.dateTime
             },
-            status:  item.status,
-            summary:  item.summary,
-            updated:  item.updated,
-            timeZone:  req.body.result.timeZone,
+            status: item.status,
+            summary: item.summary,
+            updated: item.updated,
+            timeZone: req.body.result.timeZone,
         });
-         event.save().then(e => {
-             if (e) {
-                 logger.loggerInfo.info(`new event: ${e}`);
-                 events.push(item);
-             }
-             else {
-                 logger.loggerError.error(`Something went wrong`);
-                 return null;
-             }
-         }).catch(error => {
-             logger.loggerError.error(error);
-             res.status(500).json({
-                 error: error
-             });
-         });
+        event.save().then(e => {
+            if (e) {
+                // logger.loggerInfo.info(`new event: ${e}`);
+                events.push(e);
+            } else {
+                logger.loggerError.error(`Something went wrong`);
+                return null;
+            }
+        }).catch(error => {
+            logger.loggerError.error(error);
+            res.status(500).json({
+                error: error
+            });
+        });
+    }).then(e => {
+        console.log('----------------------------------------------------------------------');
+        console.log(events);
+        console.log('----------------------------------------------------------------------');
+        res.status(201).json({
+            events: events
+        });
     });
-    console.log(items.length);
-    res.status(201).json({
-        events: events
-    });
+    console.log('----------------------------------------------------------------------');
+    console.log(events);
+    console.log('----------------------------------------------------------------------');
+
 });
 
 router.post('/token', (req, res, next) => {
@@ -115,8 +121,7 @@ router.post('/token', (req, res, next) => {
             res.status(201).json({
                 message: 'success'
             });
-        }
-        else {
+        } else {
             logger.loggerError.error(`Something went wrong`);
             return null;
         }
