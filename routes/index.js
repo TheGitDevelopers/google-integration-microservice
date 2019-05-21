@@ -97,6 +97,7 @@ router.post('/events', async (req, res, next) => {
             });
         });
     });
+
 });
 
 router.post('/token', (req, res, next) => {
@@ -122,10 +123,12 @@ router.post('/token', (req, res, next) => {
     });
 });
 
-router.delete('/events', (req, res) => {
-    const id = req.body.id;
+router.delete('/events/:id', (req, res) => {
+    const id = req.params.id;
     console.log(id);
-    Event.deleteOne({_id: id})
+    Event.deleteOne({
+            _id: id
+        })
         .exec()
         .then(e => {
             res.status(200).json(e);
@@ -144,8 +147,7 @@ router.put('/events', (req, res, next) => {
             res.status(500).json({
                 error: err
             });
-        }
-        else {
+        } else {
             const item = req.body.item;
             event.created = item.created;
             event.creator = {
