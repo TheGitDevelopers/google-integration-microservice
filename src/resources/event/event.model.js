@@ -8,7 +8,7 @@ const eventSchema = mongoose.Schema({
   },
   description: String,
   end: {
-    dateTime: String,
+    dateTime: { type: Number },
   },
   extendedProperties: {
     private: {
@@ -27,9 +27,8 @@ const eventSchema = mongoose.Schema({
   reminders: {
     useDefault: Boolean,
   },
-  sequence: Number,
   start: {
-    dateTime: String,
+    dateTime: { type: Date },
   },
   status: String,
   summary: String,

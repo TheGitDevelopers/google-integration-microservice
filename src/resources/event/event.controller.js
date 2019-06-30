@@ -1,7 +1,7 @@
 /* eslint-disable */
-
 import Event from './event.model';
 import logger from '../../tools/logger';
+const MongoClient = require('mongodb').MongoClient;
 
 const getAll = (req, res) => {
   Event.find({})
@@ -19,10 +19,49 @@ const getAll = (req, res) => {
     });
 };
 
+const findByDateRange = (req, res) => {
+  const { dateFrom, dateTo } = req.body.event;
+  const parsedDateFrom = new Date(dateFrom.toString()).getTime();
+  const parsedDateTo = new Date(dateTo.toString()).getTime();
+  console.log(parsedDateFrom);
+  MongoClient.connect(process.env.DATABASE_URL, async (err, db) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).end();
+    } else {
+      const dbo = db.db('negotiumDB');
+      const eventsArray = [];
+      await dbo.collection('events').find(
+        {
+          updated: {
+            $gte: parsedDateFrom,
+            $lte: parsedDateTo,
+          },
+        },
+        async (error, items) => {
+          if (error) {
+            console.error(err);
+            return res.status(500).end();
+          } else {
+            await items.forEach((event, err) => {
+              if (err) {
+                console.error(err);
+                res.status(500).end();
+              } else eventsArray.push(event);
+            });
+          }
+        },
+      );
+      return res.status(200).json({
+        data: eventsArray,
+      });
+    }
+  });
+};
+
 const createOne = (req, res) => {
   const { items } = req.body.result;
   items.map(item => {
-    console.log(item);
     const event = new Event({
       created: item.created,
       creator: {
@@ -150,4 +189,5 @@ export default {
   createOne,
   removeOne,
   findAndUpdateOne,
+  findByDateRange,
 };

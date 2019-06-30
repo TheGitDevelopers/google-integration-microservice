@@ -59,4 +59,4 @@ app.listen(process.env.PORT || 9000, () => {
   }
 });
 
-export default app;
+module.exports = app;
