@@ -12,12 +12,18 @@ import tokenRouter from './resources/token/token.route';
 
 dotenv.config();
 
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+});
 const app = express();
 
 app.use(httpLogger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(
+  express.urlencoded({
+    extended: false,
+  }),
+);
 app.use(cookieParser());
 app.use(bodyParser.json());
 
@@ -31,6 +37,7 @@ app.use((req, res, next) => {
 
 // -------------------------global logger----------------------------//
 app.all('*', (req, res, next) => {
+  logger.loggerInfo.info(req.params);
   logger.loggerInfo.info(
     `[${new Date().toDateString()} | Time ${new Date().toLocaleTimeString()}] - Incoming request - [method: ${
       req.method

@@ -23,7 +23,8 @@ const findByDateRange = (req, res) => {
   const { dateFrom, dateTo } = req.body.event;
   const parsedDateFrom = new Date(dateFrom.toString()).getTime();
   const parsedDateTo = new Date(dateTo.toString()).getTime();
-  console.log(parsedDateFrom);
+  console.log('from', parsedDateFrom);
+  console.log('to', parsedDateTo);
   MongoClient.connect(process.env.DATABASE_URL, async (err, db) => {
     if (err) {
       console.error(err);
@@ -33,7 +34,7 @@ const findByDateRange = (req, res) => {
       const eventsArray = [];
       await dbo.collection('events').find(
         {
-          updated: {
+          'start.dateTime': {
             $gte: parsedDateFrom,
             $lte: parsedDateTo,
           },
@@ -60,27 +61,28 @@ const findByDateRange = (req, res) => {
 };
 
 const createOne = (req, res) => {
+  console.log(req.body.result.items[0]);
   const { items } = req.body.result;
   items.map(item => {
     const event = new Event({
-      created: item.created,
+      created: item.created ? item.created : null,
       creator: {
         email: item.creator.email,
         self: item.creator.self,
       },
       description: item.description,
       end: {
-        dateTime: item.end.dateTime,
+        dateTime: new Date(item.end.dateTime).getTime(),
       },
       extendedProperties: {
         private: {
           everyoneDeclinedDismissed: item.extendedProperties.private.everyoneDeclinedDismissed,
         },
       },
-      htmlLink: item.htmlLink,
-      iCalUID: item.iCalUID,
+      htmlLink: item.htmlLink ? item.htmlLink : null,
+      iCalUID: item.iCalUID ? item.iCalUID : null,
       id: item.id,
-      kind: item.kind,
+      kind: item.kind ? item.kind : null,
       location: item.location,
       organizer: {
         email: item.organizer.email,
@@ -89,13 +91,12 @@ const createOne = (req, res) => {
       reminders: {
         useDefault: item.reminders.useDefault,
       },
-      sequence: item.sequence,
       start: {
-        dateTime: item.start.dateTime,
+        dateTime: new Date(item.start.dateTime).getTime,
       },
-      status: item.status,
-      summary: item.summary,
-      updated: item.updated,
+      status: item.status ? item.summary : null,
+      summary: item.summary ? item.summary : null,
+      updated: item.updated ? item.updated : null,
       timeZone: req.body.result.timeZone,
     });
     event

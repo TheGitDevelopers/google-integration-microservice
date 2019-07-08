@@ -8,17 +8,28 @@ const eventSchema = mongoose.Schema({
   },
   description: String,
   end: {
-    dateTime: { type: Number },
+    dateTime: {
+      type: Number,
+    },
   },
   extendedProperties: {
     private: {
       everyoneDeclinedDismissed: String,
     },
   },
-  htmlLink: String,
-  iCalUID: String,
+  htmlLink: {
+    type: String,
+    default: null,
+  },
+  iCalUID: {
+    type: String,
+    default: null,
+  },
   id: String,
-  kind: String,
+  kind: {
+    type: String,
+    default: null,
+  },
   location: String,
   organizer: {
     email: String,
@@ -28,12 +39,26 @@ const eventSchema = mongoose.Schema({
     useDefault: Boolean,
   },
   start: {
-    dateTime: { type: Date },
+    dateTime: {
+      type: Number,
+    },
   },
-  status: String,
-  summary: String,
-  updated: String,
-  timeZone: String,
+  status: {
+    type: String,
+    default: null,
+  },
+  summary: {
+    type: String,
+    default: null,
+  },
+  updated: {
+    type: String,
+    default: null,
+  },
+  timeZone: {
+    type: String,
+    default: null,
+  },
 });
 
 export default mongoose.model('Event', eventSchema);

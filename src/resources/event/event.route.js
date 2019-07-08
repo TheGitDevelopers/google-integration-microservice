@@ -10,5 +10,6 @@ router
   .put(controller.findAndUpdateOne);
 
 router.route('/events/:id').delete(controller.removeOne);
+router.route('/create').post(controller.createOne);
 
 export default router;
