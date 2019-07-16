@@ -61,7 +61,6 @@ const findByDateRange = (req, res) => {
 };
 
 const createOne = (req, res) => {
-  console.log(req.body.result.items[0]);
   const { items } = req.body.result;
   items.map(item => {
     const event = new Event({
@@ -136,59 +135,63 @@ const removeOne = (req, res) => {
     });
 };
 
-const findAndUpdateOne = (req, res) => {
-  Event.findById(req.body.id, (err, event) => {
-    if (err) {
-      res.status(500).json({
-        error: err,
-      });
-    } else {
-      const { item } = req.body;
-      event.created = item.created;
-      event.creator = {
-        email: item.creator.email,
-        self: item.creator.self,
-      };
-      event.description = item.description;
-      event.end = {
-        dateTime: item.end.dateTime,
-      };
-      event.extendedProperties = {
+const findAndUpdateEvent = (req, res) => {
+  const { event } = req.body;
+  console.log(event.id);
+  Event.findOneAndUpdate(
+    { id: event.id },
+    {
+      creator: {
+        email: event.creator.email,
+        self: event.creator.self,
+      },
+      end: {
+        dateTime: event.end.dateTime,
+      },
+      extendedProperties: {
         private: {
-          everyoneDeclinedDismissed: item.extendedProperties.private.everyoneDeclinedDismissed,
+          everyoneDeclinedDismissed: event.extendedProperties.private.everyoneDeclinedDismissed,
         },
-      };
-      event.htmlLink = item.htmlLink;
-      event.iCalUID = item.iCalUID;
-      event.id = item.id;
-      event.kind = item.kind;
-      event.location = item.location;
-      event.organizer = {
-        email: item.organizer.email,
-        self: item.organizer.self,
-      };
-      event.reminders = {
-        useDefault: item.reminders.useDefault,
-      };
-      event.sequence = item.sequence;
-      event.start = {
-        dateTime: item.start.dateTime,
-      };
-      event.status = item.status;
-      event.summary = item.summary;
-      event.updated = item.updated;
-      event.timeZone = req.body.result.timeZone;
-      res.status(200).json({
-        message: `Event [id:${event._id}] has been updated`,
-      });
-    }
-  });
+      },
+      organizer: {
+        email: event.organizer.email,
+        self: event.organizer.self,
+      },
+      reminders: {
+        useDefault: event.reminders.useDefault,
+      },
+      start: {
+        dateTime: event.start.dateTime,
+      },
+      htmlLink: event.htmlLink,
+      iCalUID: event.iCalUID,
+      kind: event.kind,
+      status: event.status,
+      summary: event.summary,
+      updated: event.updated,
+      timeZone: event.timeZone,
+      created: event.created,
+      description: event.description,
+      id: event.id,
+    },
+    (err, event) => {
+      if (err) {
+        res.status(500).json({
+          error: err,
+        });
+      } else {
+        res.status(200).json({
+          message: `Event [id:${event.id}] has been updated`,
+        });
+      }
+    },
+  );
 };
 
 export default {
   getAll,
   createOne,
   removeOne,
-  findAndUpdateOne,
+  findAndUpdateEvent,
   findByDateRange,
 };

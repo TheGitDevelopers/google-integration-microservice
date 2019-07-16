@@ -7,7 +7,7 @@ router
   .route('/')
   .get(controller.getAll)
   .post(controller.findByDateRange)
-  .put(controller.findAndUpdateOne);
+  .put(controller.findAndUpdateEvent);
 
 router.route('/events/:id').delete(controller.removeOne);
 router.route('/create').post(controller.createOne);
