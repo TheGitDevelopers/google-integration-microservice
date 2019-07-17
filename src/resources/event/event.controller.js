@@ -34,7 +34,7 @@ const findByDateRange = (req, res) => {
       const eventsArray = [];
       await dbo.collection('events').find(
         {
-          'start.date': {
+          'start.dateTime': {
             $gte: parsedDateFrom,
             $lte: parsedDateTo,
           },
@@ -63,7 +63,6 @@ const findByDateRange = (req, res) => {
 const createOne = (req, res) => {
   const { items } = req.body.result;
   items.map(item => {
-    console.log(item);
     const event = new Event({
       created: item.created ? item.created : null,
       creator: {
@@ -72,7 +71,7 @@ const createOne = (req, res) => {
       },
       description: item.description,
       end: {
-        date: new Date(item.end.date).getTime(),
+        dateTime: new Date(item.end.dateTime).getTime(),
       },
       extendedProperties: {
         private: {
@@ -92,7 +91,7 @@ const createOne = (req, res) => {
         useDefault: item.reminders.useDefault,
       },
       start: {
-        date: new Date(item.start.date).getTime(),
+        dateTime: new Date(item.start.dateTime).getTime(),
       },
       status: item.status ? item.summary : null,
       summary: item.summary ? item.summary : null,
@@ -149,7 +148,7 @@ const findAndUpdateEvent = (req, res) => {
         self: event.creator.self,
       },
       end: {
-        date: event.end.date,
+        dateTime: event.end.dateTime,
       },
       extendedProperties: {
         private: {
@@ -164,7 +163,7 @@ const findAndUpdateEvent = (req, res) => {
         useDefault: event.reminders.useDefault,
       },
       start: {
-        date: event.start.date,
+        dateTime: event.start.dateTime,
       },
       htmlLink: event.htmlLink,
       iCalUID: event.iCalUID,

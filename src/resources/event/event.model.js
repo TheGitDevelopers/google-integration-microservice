@@ -8,7 +8,7 @@ const eventSchema = mongoose.Schema({
   },
   description: String,
   end: {
-    date: {
+    dateTime: {
       type: Number,
     },
   },
@@ -39,7 +39,7 @@ const eventSchema = mongoose.Schema({
     useDefault: Boolean,
   },
   start: {
-    date: {
+    dateTime: {
       type: Number,
     },
   },
