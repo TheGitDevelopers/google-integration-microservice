@@ -34,7 +34,7 @@ const findByDateRange = (req, res) => {
       const eventsArray = [];
       await dbo.collection('events').find(
         {
-          'start.dateTime': {
+          'start.date': {
             $gte: parsedDateFrom,
             $lte: parsedDateTo,
           },
@@ -71,7 +71,7 @@ const createOne = (req, res) => {
       },
       description: item.description,
       end: {
-        dateTime: new Date(item.end.dateTime).getTime(),
+        date: new Date(item.end.date).getTime(),
       },
       extendedProperties: {
         private: {
@@ -91,7 +91,7 @@ const createOne = (req, res) => {
         useDefault: item.reminders.useDefault,
       },
       start: {
-        dateTime: new Date(item.start.dateTime).getTime(),
+        date: new Date(item.start.date).getTime(),
       },
       status: item.status ? item.summary : null,
       summary: item.summary ? item.summary : null,
@@ -137,7 +137,6 @@ const removeOne = (req, res) => {
 
 const findAndUpdateEvent = (req, res) => {
   const { event } = req.body;
-  console.log(event.id);
   Event.findOneAndUpdate(
     {
       id: event.id,
@@ -148,7 +147,7 @@ const findAndUpdateEvent = (req, res) => {
         self: event.creator.self,
       },
       end: {
-        dateTime: event.end.dateTime,
+        date: event.end.date,
       },
       extendedProperties: {
         private: {
@@ -163,7 +162,7 @@ const findAndUpdateEvent = (req, res) => {
         useDefault: event.reminders.useDefault,
       },
       start: {
-        dateTime: event.start.dateTime,
+        date: event.start.date,
       },
       htmlLink: event.htmlLink,
       iCalUID: event.iCalUID,
