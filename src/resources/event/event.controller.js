@@ -91,7 +91,7 @@ const createOne = (req, res) => {
         useDefault: item.reminders.useDefault,
       },
       start: {
-        dateTime: new Date(item.start.dateTime).getTime,
+        dateTime: new Date(item.start.dateTime).getTime(),
       },
       status: item.status ? item.summary : null,
       summary: item.summary ? item.summary : null,
@@ -139,7 +139,9 @@ const findAndUpdateEvent = (req, res) => {
   const { event } = req.body;
   console.log(event.id);
   Event.findOneAndUpdate(
-    { id: event.id },
+    {
+      id: event.id,
+    },
     {
       creator: {
         email: event.creator.email,
